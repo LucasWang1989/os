@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nz.ac.sit.os.mapper.ProductDefMapper">
+    <resultMap id="ProductMap" type="nz.ac.sit.os.domain.product.ProductModel">
+        <id column="F_ID" property="id"/>
+        <result column="F_NAME" property="name"/>
+        <result column="F_PRICE" property="price"/>
+        <result column="F_DESC" property="desc"/>
+        <result column="F_IMG_PATH" property="imagePath"/>
+        <result column="F_UPDATE_DATE" property="updateDate"/>
+        <result column="F_UPDATE_TIME" property="updateTime"/>
+        <result column="F_CREATED_DATE" property="createdDate"/>
+        <result column="F_CREATED_TIME" property="createdTime"/>
+        <result column="DISH_NUMBER" property="dishNumber"/>
+        <result column="F_ORDER_NO" property="orderNo"/>
+        <result column="F_ORDER_STATUS" property="orderStatus"/>
+        <result column="F_PAY_STATUS" property="payStatus"/>
+        <result column="F_COOKING_STATUS" property="cookingStatus"/>
+        <result column="F_TABLE_NO" property="tableNo"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        F_NAME, F_PRICE, F_DESC, F_IMG_PATH, F_UPDATE_DATE,
+        F_UPDATE_TIME, F_CREATED_DATE,F_CREATED_TIME
+    </sql>
+
+    <insert id="addProduct" parameterType="nz.ac.sit.os.domain.product.ProductModel">
+        insert into os_product_def(<include refid="Base_Column_List"/>)
+        values (#{name},#{price},#{desc},#{imagePath},#{updateDate},
+        #{updateTime},#{createdDate},#{createdTime})
+    </insert>
+
+    <select id="fetchProduct" resultMap="ProductMap">
+        select * from os_product_def
+    </select>
+
+    <select id="fetchOrderProduct" parameterType="String" resultMap="ProductMap">
+        select op.F_ORDER_NO,
+        op.F_AMOUNT as DISH_NUMBER,
+        mo.F_PAY_STATUS,
+        mo.F_ORDER_STATUS,
+        mo.F_COOKING_STATUS,
+        mo.F_TABLE_NO,
+        pd.F_ID,
+        pd.F_NAME,
+        pd.F_PRICE,
+        pd.F_DESC,
+        pd.F_IMG_PATH
+        from os_order_product op, os_product_def pd, os_merc_order mo
+        where op.F_PRODUCT_ID = pd.F_ID
+        and op.F_ORDER_NO = mo.F_ORDER_NO
+        and op.F_ORDER_NO = #{orderNo}
+    </select>
+
+</mapper>

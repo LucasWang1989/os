@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Title here -->
+    <title>SIT. CAFE -- CART</title>
+    <!-- Description, Keywords and Author -->
+    <meta name="description" content="SIT. CAFE -- CART" />
+    <meta name="keywords" content="SIT. CAFE -- CART" />
+    <meta name="author" content="SIT. CAFE -- CART" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="Images/ico/favicon.ico" type="image/x-icon">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/response.css" />
+    <!-- jQuery -->
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <!-- Custom JS -->
+    <script type="text/javascript" src="js/custom.js"></script>
+</head>
+<body>
+    <div class="ng-scope">
+        <!--Shopping cart is empty-->
+        <div class="cartempty ng-scope">
+            <h3>The shopping cart is empty</h3>
+            <a id="go2order" href="">Go to Order</a>
+        </div>
+        <!--Shopping cart is empty-->
+
+    </div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sessionKeys = Object.keys(sessionStorage);
+        for (var i = 0; i < sessionKeys.length; i++) {
+            var sessionKey = sessionKeys[i];
+            if(sessionKey == "table"){
+                var table = JSON.parse(sessionStorage.getItem(sessionKey))
+                $("#go2order").attr("href","/customer/fetch-menu?tableNo=" + table.id);
+            }
+        }
+    });
+</script>
+
+</html>

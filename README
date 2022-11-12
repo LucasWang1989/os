@@ -1,0 +1,10 @@
+Mybatis mapper bind error
+Check the mapper.xml path, the layer of folder, like mybatis.mapper and mybatis/mapper.
+
+
+
+Generated Credit Card Details (Mock env.)
+--Card Type: Visa
+--Card Number: 4032032897387889
+--Expiration Date: 10/2027
+--CVV: 166

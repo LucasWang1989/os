@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nz.ac.sit.os.mapper.MercOrderMapper">
+    <resultMap id="MercOrderMap" type="nz.ac.sit.os.domain.order.MercOrderModel">
+        <id column="F_ORDER_NO" property="orderNo"/>
+        <result column="F_NAME" property="name"/>
+        <result column="F_TABLE_NO" property="tableNo"/>
+        <result column="F_MERC_ID" property="mercId"/>
+        <result column="F_SHOP_ID" property="shopId"/>
+        <result column="F_PAY_TYPE" property="payType"/>
+        <result column="F_ORDER_STATUS" property="orderStatus"/>
+        <result column="F_REFUND_STATUS" property="refundStatus"/>
+        <result column="F_PAY_STATUS" property="payStatus"/>
+        <result column="F_ORDER_AMOUNT" property="orderAmount"/>
+        <result column="F_RESIDUE_REFUND_AMOUNT" property="residueRefundAmount"/>
+        <result column="F_ALREADY_REFUND_AMOUNT" property="alreadyRefundAmount"/>
+        <result column="F_PRODUCT_DESC" property="productDesc"/>
+        <result column="F_UPDATE_DATE" property="updateDate"/>
+        <result column="F_UPDATE_TIME" property="updateTime"/>
+        <result column="F_CREATED_DATE" property="createdDate"/>
+        <result column="F_CREATED_TIME" property="createdTime"/>
+        <result column="F_ORDER_TYPE" property="orderType"/>
+        <result column="F_EXT_PARA" property="extPara"/>
+        <result column="F_RESERVED" property="reserved"/>
+        <result column="F_RESERVED_1" property="reserved1"/>
+        <result column="F_RESERVED_2" property="reserved2"/>
+        <result column="F_COOKING_STATUS" property="cookingStatus"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+         F_ORDER_NO, F_TABLE_NO, F_MERC_ID, F_SHOP_ID, F_PAY_TYPE,
+         F_ORDER_STATUS, F_REFUND_STATUS, F_PAY_STATUS, F_ORDER_AMOUNT,
+         F_RESIDUE_REFUND_AMOUNT, F_ALREADY_REFUND_AMOUNT, F_PRODUCT_DESC,
+         F_UPDATE_DATE, F_UPDATE_TIME, F_CREATED_DATE, F_CREATED_TIME,
+         F_ORDER_TYPE, F_EXT_PARA, F_RESERVED, F_RESERVED_1, F_RESERVED_2,F_COOKING_STATUS
+    </sql>
+
+
+    <insert id="storeMercOrder" parameterType="nz.ac.sit.os.domain.order.MercOrderModel">
+        insert into os_merc_order(<include refid="Base_Column_List"/>)
+        values (
+        #{orderNo},
+        #{tableNo},
+        #{mercId},
+        #{shopId},
+        #{payType},
+        #{orderStatus},
+        #{refundStatus},
+        #{payStatus},
+        #{orderAmount},
+        #{residueRefundAmount},
+        #{alreadyRefundAmount},
+        #{productDesc},
+        #{updateDate},
+        #{updateTime},
+        #{createdDate},
+        #{createdTime},
+        #{orderType},
+        #{extPara},
+        #{reserved},
+        #{reserved1},
+        #{reserved2},
+        #{cookingStatus}
+        )
+    </insert>
+
+    <select id="fetchOrder" resultMap="MercOrderMap">
+        select <include refid="Base_Column_List"/>
+            from os_merc_order
+            order by F_UPDATE_DATE
+    </select>
+
+    <select id="fetchLatestWait2CookOrder" resultMap="MercOrderMap">
+        select <include refid="Base_Column_List"/>
+        from os_merc_order
+        where F_CREATED_DATE = date_format(now(),'%Y%m%d')
+        and F_ORDER_STATUS = '2'
+        and F_PAY_STATUS = '1'
+        and F_COOKING_STATUS = '0'
+        order by F_UPDATE_DATE limit 1
+    </select>
+
+    <update id="updateMercOrder" parameterType="nz.ac.sit.os.domain.order.MercOrderModel">
+        update os_merc_order
+        set
+        <if test="payStatus!=null and payStatus!=''">
+            F_PAY_STATUS = #{payStatus},
+        </if>
+        <if test="orderStatus!=null and orderStatus!=''">
+            F_ORDER_STATUS = #{orderStatus},
+        </if>
+        <if test="cookingStatus!=null and cookingStatus!=''">
+            F_COOKING_STATUS = #{cookingStatus},
+        </if>
+        F_UPDATE_DATE = #{updateDate},
+        F_UPDATE_TIME = #{updateTime}
+        where F_ORDER_NO = #{orderNo}
+    </update>
+</mapper>

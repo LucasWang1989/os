@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nz.ac.sit.os.mapper.OrderProductMapper">
+<!--    <resultMap id="ProductModelMap" type="nz.ac.sit.os.domain.product.OrderProductModel">-->
+<!--        <id column="F_ID" property="id"/>-->
+<!--        <result column="F_NAME" property="name"/>-->
+<!--        <result column="F_PRICE" property="price"/>-->
+<!--        <result column="F_DESC" property="desc"/>-->
+<!--        <result column="F_IMG_PATH" property="imagePath"/>-->
+<!--        <result column="F_UPDATE_DATE" property="updateDate"/>-->
+<!--        <result column="F_UPDATE_TIME" property="updateTime"/>-->
+<!--        <result column="F_CREATED_DATE" property="createdDate"/>-->
+<!--        <result column="F_CREATED_TIME" property="createdTime"/>-->
+
+<!--    </resultMap>-->
+
+    <sql id="Base_Column_List">
+         F_ORDER_NO, F_PRODUCT_ID, F_AMOUNT, F_UPDATE_DATE, F_UPDATE_TIME, F_CREATED_DATE,F_CREATED_TIME
+    </sql>
+
+
+    <insert id="storeOrderProduct" parameterType="java.util.List">
+        insert into os_order_product(<include refid="Base_Column_List"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.orderNo},
+            #{item.productId},
+            #{item.amount},
+            #{item.updateDate},
+            #{item.updateTime},
+            #{item.createdDate},
+            #{item.createdTime}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

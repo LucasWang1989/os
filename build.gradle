@@ -15,6 +15,18 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+//	implementation 'org.mybatis.spring.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+// https://mvnrepository.com/artifact/com.paypal.sdk/checkout-sdk
+//	implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
+	implementation 'com.paypal.sdk:checkout-sdk:2.0.0'
+	implementation 'org.apache.commons:commons-lang3:3.6'
+	implementation 'org.json:json:20180813'
+	implementation 'mysql:mysql-connector-java:5.1.48'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	implementation 'com.alibaba:fastjson:1.2.47'
+	implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

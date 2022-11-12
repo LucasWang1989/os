@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Title here -->
+    <title>SIT. CAFE -- CART</title>
+    <!-- Description, Keywords and Author -->
+    <meta name="description" content="SIT. CAFE -- CART" />
+    <meta name="keywords" content="SIT. CAFE -- CART" />
+    <meta name="author" content="SIT. CAFE -- CART" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="Images/ico/favicon.ico" type="image/x-icon">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/response.css" />
+    <!-- jQuery -->
+    <script src="js/jquery.js" type="text/javascript"></script>
+
+</head>
+<body>
+    <div class="ng-scope">
+        <div class="cartpay ng-scope ">
+            <div class="take-delivery">
+                <div class="addr">
+                    <p style="color:#FA2C2A" class="ng-binding" id="tableno">Table No: 1</p>
+                </div>
+            </div>
+            <section class="prolist_section">
+                <ul id="prolist" class="lists">
+                </ul>
+            </section>
+            <!--Check out navigator-->
+            <div class="cart ng-scope">
+                <div class="r"><a href="javascript:checkout();">Checkout</a></div>
+                <div class="l ng-binding c">
+                    $<label id="totalmoney">5.46</label>
+                </div>
+            </div>
+            <!--Check out navigator-->
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sessionKeys = Object.keys(sessionStorage);
+        let html = '';
+        var totalAmount = 0;
+
+        for (var i = 0; i < sessionKeys.length; i++) {
+            var sessionKey = sessionKeys[i];
+            if(sessionKey == "table"){
+                var table = JSON.parse(sessionStorage.getItem(sessionKey))
+                $("#tableno").text("Table No: " + table.id);
+                continue;
+            }
+            let dish = JSON.parse(sessionStorage.getItem(sessionKey));
+            totalAmount += parseFloat(dish.price) * parseInt(dish.amount);
+
+            html += '<li price="'+dish.price+'" class="on" cart="1" productid="'+dish.id+'">\n' +
+                '                        <div class="l">\n' +
+                '                            <a href="proDetail.html" target="_blank"><img src="'+dish.imagePaht+'" class="img-responsive" alt="..." /></a>\n' +
+                '                        </div>\n' +
+                '                        <div class="r">\n' +
+                '                            <p class="t">'+dish.name+'</p>\n' +
+                '                            <p class="price">'+dish.price+'</p>\n' +
+                '                            <div class="showaddcart">\n' +
+                '                                <div class="num_con">\n' +
+                '                                    <img src="img/num_l.png" class="img-responsive num_l" alt="..." />\n' +
+                '                                    <span class="number">'+dish.amount+'</span>\n' +
+                '                                    <img src="img/num_r.png" class="img-responsive num_r" alt="..." />\n' +
+                '                                </div>\n' +
+                '                            </div>\n' +
+                '                        </div>\n' +
+                '                    </li>';
+        }
+        $("#prolist").append(html);
+
+        $("#totalmoney").text(totalAmount.toFixed(2));
+    });
+
+
+    function checkout() {
+        var sessionKeys = Object.keys(sessionStorage);
+        var data = [];
+        var tableNo = "";
+
+        for (var i=0;i<sessionKeys.length;i++) {
+            if(sessionKeys[i] == "table"){
+                tableNo = JSON.parse(sessionStorage.getItem(sessionKeys[i])).id;
+                continue;
+            }
+            data.push(sessionStorage.getItem(sessionKeys[i]));
+        }
+
+        var tempform = document.createElement("form");
+
+        tempform.action = "checkout";
+        tempform.method = "post";
+        tempform.style.display="none"
+        tempform.enctype = "application/json;charset=utf-8";
+
+        var opt = document.createElement("input");
+        opt.name = "data";
+        opt.value = data;
+        tempform.appendChild(opt);
+
+        var opt3 = document.createElement("input");
+        opt3.name = "tableNo";
+        opt3.value = tableNo;
+        tempform.appendChild(opt3);
+
+        var opt2 = document.createElement("input");
+        opt2.type = "submit";
+        tempform.appendChild(opt2);
+        document.body.appendChild(tempform);
+        tempform.submit();
+        document.body.removeChild(tempform);
+    }
+
+</script>
+<!-- Custom JS -->
+<script type="text/javascript" src="js/custom.js"></script>
+</html>

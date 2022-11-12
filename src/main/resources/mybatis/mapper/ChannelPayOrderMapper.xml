@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nz.ac.sit.os.mapper.ChannelPayOrderMapper">
+    <resultMap id="ChannelOrderMap" type="nz.ac.sit.os.domain.order.ChannelOrderModel">
+        <id column="F_ID" property="id"/>
+        <result column="F_PAY_ORDER_NO" property="payOrderNo"/>
+        <result column="F_PAY_TYPE" property="payType"/>
+        <result column="F_CHANNEL_NO" property="channelNo"/>
+        <result column="F_CHANNEL_PAY_ORDER_NO" property="channelPayOrderNo"/>
+        <result column="F_PAY_STATUS" property="payStatus"/>
+        <result column="F_PAY_AMOUNT" property="payAmount"/>
+        <result column="F_PAY_TIME" property="payTime"/>
+        <result column="F_REMARK" property="remark"/>
+        <result column="F_UPDATE_TIME" property="updateTime"/>
+        <result column="F_CREATED_TIME" property="createdTime"/>
+        <result column="F_CHANNEL_MERC_ID" property="channelMercId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+         F_PAY_ORDER_NO,F_PAY_TYPE,F_CHANNEL_NO,
+         F_CHANNEL_PAY_ORDER_NO, F_PAY_STATUS,F_PAY_AMOUNT,
+         F_PAY_TIME,F_REMARK,F_UPDATE_TIME, F_CREATED_TIME,
+         F_CHANNEL_MERC_ID
+    </sql>
+
+
+    <insert id="storeChannelOrder" parameterType="nz.ac.sit.os.domain.order.ChannelOrderModel">
+        insert into os_channel_pay_order(<include refid="Base_Column_List"/>)
+        values (
+        #{payOrderNo},
+        #{payType},
+        #{channelNo},
+        #{channelPayOrderNo},
+        #{payStatus},
+        #{payAmount},
+        #{payTime},
+        #{remark},
+        #{updateTime},
+        #{createdTime},
+        #{channelMercId}
+        )
+    </insert>
+
+    <update id="updateChannelOrder" parameterType="nz.ac.sit.os.domain.order.ChannelOrderModel">
+        update os_channel_pay_order
+            set
+                <if test="channelPayOrderNo!=null and channelPayOrderNo!=''">
+                    F_CHANNEL_PAY_ORDER_NO = #{channelPayOrderNo},
+                </if>
+                <if test="payTime!=null and payTime!=''">
+                    F_PAY_TIME = #{payTime},
+                </if>
+                F_PAY_STATUS = #{payStatus}
+
+             where F_PAY_ORDER_NO = #{payOrderNo}
+    </update>
+
+    <update id="updateChannelOrderByChannelOrderNo" parameterType="nz.ac.sit.os.domain.order.ChannelOrderModel">
+        update os_channel_pay_order
+        set
+        <if test="payTime!=null and payTime!=''">
+            F_PAY_TIME = #{payTime},
+        </if>
+        F_PAY_STATUS = #{payStatus}
+
+        where F_CHANNEL_PAY_ORDER_NO = #{channelPayOrderNo}
+    </update>
+
+    <select id="acquireChannelOrderByChannelOrderNo" parameterType="nz.ac.sit.os.domain.order.ChannelOrderModel" resultMap="ChannelOrderMap">
+        select <include refid="Base_Column_List"/>
+            from os_channel_pay_order
+            where 1=1
+                <if test="payOrderNo!=null and payOrderNo!=''">
+                    and F_PAY_ORDER_NO = #{payOrderNo}
+                </if>
+                <if test="channelPayOrderNo!=null and channelPayOrderNo!=''">
+                    and F_CHANNEL_PAY_ORDER_NO = #{channelPayOrderNo}
+                </if>
+    </select>
+</mapper>
