@@ -150,7 +150,7 @@
 														<tr>
 															<td>
 																<div class="media">
-																	<a href="ecom-product-detail.html"><img class="mr-3 img-fluid rounded" src="images/card/Untitled-6.jpg" alt="DexignZone"></a>
+																	<a href="ecom-product-detail.html"><img class="mr-3 img-fluid rounded" src="/customer/<%=wait2CookOrderProduct.getImagePath()%>" alt="DexignZone" width="87px" height="87px"></a>
 																	<div class="media-body">
 																		<small class="mt-0 mb-1 font-w500"><a class="text-primary" href="javascript:void(0);">MAIN COURSE</a></small>
 																		<h5 class="mt-0 mb-2 mb-sm-3"><a class="text-black" href="ecom-product-detail.html"><%=wait2CookOrderProduct.getName()%></a></h5>
