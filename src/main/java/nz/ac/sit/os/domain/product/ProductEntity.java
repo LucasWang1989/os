@@ -1,5 +1,6 @@
 package nz.ac.sit.os.domain.product;
 
+import lombok.Data;
 import java.math.BigInteger;
 
 /**
@@ -8,6 +9,7 @@ import java.math.BigInteger;
  * @author: wangliang
  * @date: 2022-10-24 14:19
  **/
+@Data
 public class ProductEntity {
     private static final long serialVersionUID = 1L;
 
