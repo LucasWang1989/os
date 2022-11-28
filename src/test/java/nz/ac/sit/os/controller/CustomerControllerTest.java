@@ -18,6 +18,12 @@ class CustomerControllerTest {
     @Test
     void fetchProduct() {
         customerController.fetchProduct(1);
+    }
 
+    @Test
+    void checkout() {
+        String data = "{\"id\":\"20\",\"amount\":2,\"price\":\"18\",\"imagePaht\":\"http://localhost:8080/customer/img/tof/b3858ccf-949a-4f33-9bb2-1e66fce643c2.jpg\",\"name\":\"Noodles\"},{\"id\":\"3\",\"amount\":2,\"price\":\"15\",\"imagePaht\":\"http://localhost:8080/customer/img/tof/up3.jpg\",\"name\":\"Coffee\"}";
+        String tableNo = "1";
+        customerController.checkOut(data, tableNo);
     }
 }

@@ -6,9 +6,9 @@ import nz.ac.sit.os.channel.paypal.remote.PayPalRemoteAPI;
 import nz.ac.sit.os.common.util.AmountUtil;
 import nz.ac.sit.os.common.util.DateUtil;
 import nz.ac.sit.os.domain.order.ChannelOrderModel;
+import nz.ac.sit.os.service.trade.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * @date: 2022-10-26 14:02
  **/
 @Service
-public class PayPalPayService {
+public class PayPalPaymentService implements PaymentService {
 
     @Autowired
     private PayPalRemoteAPI payPalRemoteAPI;
@@ -29,6 +29,7 @@ public class PayPalPayService {
      *
      * @return OrderRequest with created order request
      */
+    @Override
     public ChannelOrderModel createOrder(ChannelOrderModel channelOrder) {
         // Generate a result object
         ChannelOrderModel channelOrderResult = new ChannelOrderModel();

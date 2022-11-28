@@ -1,6 +1,5 @@
 package nz.ac.sit.os.service.trade;
 
-import nz.ac.sit.os.channel.paypal.service.PayPalPayService;
 import nz.ac.sit.os.common.util.DateUtil;
 import nz.ac.sit.os.common.util.OrderGenerators;
 import nz.ac.sit.os.domain.order.ChannelOrderModel;
@@ -11,6 +10,7 @@ import nz.ac.sit.os.mapper.ChannelPayOrderMapper;
 import nz.ac.sit.os.mapper.MercOrderMapper;
 import nz.ac.sit.os.mapper.OrderProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
@@ -33,7 +33,7 @@ public class TradeService {
     @Autowired
     private OrderProductMapper orderProductMapper;
     @Autowired
-    private PayPalPayService payPalPayService;
+    private ApplicationContext appContext;
 
 
     @Transactional
@@ -100,8 +100,12 @@ public class TradeService {
         // Add relationship between orders and order products
         orderProductMapper.storeOrderProduct(orderProducts);
 
-        // Communicate with PayPal to create an order
-        ChannelOrderModel channelOrderResult = payPalPayService.createOrder(channelOrder);
+        // Choose a channel from routing service
+        String channelName = "payPal"; //payment routing service will be implemented soon.
+
+        // Communicate with a payment channel to create an order
+        PaymentService paymentService = (PaymentService)appContext.getBean(channelName + "PaymentService");
+        ChannelOrderModel channelOrderResult = paymentService.createOrder(channelOrder);
 
         // Update channel order information from payment companies or banks
         channelOrderResult.setPayOrderNo(orderNo);
