@@ -1,10 +1,24 @@
-Mybatis mapper bind error
-Check the mapper.xml path, the layer of folder, like mybatis.mapper and mybatis/mapper.
+This is a Food Ordering System based on my assignment.
 
+The project has been implemented features list belowed:
+1. Place an order.
+2. Dishes carts.
+3. Payments.
+4. Admin Managements.
+5.integrated PayPal channel
 
-
+The system has been deployed on AWS. 
+Please visit http://3.25.241.90:8080/customer/fetch-menu?tableNo=1 to get menus and finish payments.
 Generated Credit Card Details (Mock env.)
 --Card Type: Visa
 --Card Number: 4032032897387889
 --Expiration Date: 10/2027
 --CVV: 166
+
+Please visit http://3.25.241.90:8080/admin/login.jsp to manage this system.
+Username: admin
+Password: 123456
+
+
+
+More features and payment service providers are under continuous development...
