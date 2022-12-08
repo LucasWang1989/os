@@ -5,7 +5,7 @@ The project has been implemented features list belowed:
 2. Dishes carts.
 3. Payments.
 4. Admin Managements.
-5.integrated PayPal channel
+5. Integrated PayPal.
 
 The system has been deployed on AWS. 
 Please visit http://3.25.241.90:8080/customer/fetch-menu?tableNo=1 to get menus and finish payments.
@@ -18,7 +18,5 @@ Generated Credit Card Details (Mock env.)
 Please visit http://3.25.241.90:8080/admin/login.jsp to manage this system.
 Username: admin
 Password: 123456
-
-
 
 More features and payment service providers are under continuous development...
