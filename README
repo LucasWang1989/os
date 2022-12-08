@@ -9,7 +9,8 @@ The project has been implemented features list belowed:
 
 The system has been deployed on AWS. 
 Please visit http://3.25.241.90:8080/customer/fetch-menu?tableNo=1 to get menus and finish payments.
-Generated Credit Card Details (Mock env.)
+
+Credit Card Details (Mock env.). Please switch to New Zealand when you pay.
 --Card Type: Visa
 --Card Number: 4032032897387889
 --Expiration Date: 10/2027
