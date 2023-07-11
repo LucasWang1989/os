@@ -4,7 +4,7 @@ The project has implemented the features listed below:
 1. Place an order.
 2. Dishes carts.
 3. Payments.
-4. Admin Managements.
+4. Admin Management.
 5. Integrated PayPal.
 
 The system has been deployed on AWS. 
