@@ -8,7 +8,7 @@ The project has implemented the features listed below:
 5. Integrated PayPal.
 
 The system has been deployed on AWS. 
-Please visit http://45.77.156.196:8080/customer/fetch-menu?tableNo=1 to get menus and finish payments.
+Please visit http://13.75.155.19/customer/fetch-menu?tableNo=1 to get menus and finish payments.
 
 Credit Card Details (Mock env.). Please switch to New Zealand when you pay.
 --Card Type: Visa
@@ -16,7 +16,7 @@ Credit Card Details (Mock env.). Please switch to New Zealand when you pay.
 --Expiration Date: 10/2027
 --CVV: 166
 
-Please visit http://45.77.156.196:8080/admin/login.jsp to manage this system.
+Please visit http://13.75.155.19/admin/login.jsp to manage this system.
 Username: admin
 Password: 123456
 
