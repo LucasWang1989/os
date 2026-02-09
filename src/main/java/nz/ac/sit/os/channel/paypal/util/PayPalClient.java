@@ -11,24 +11,21 @@ import java.util.Iterator;
 
 @Component
 public class PayPalClient {
-	@Value("${PAYPAL_CLIENT_ID}")
-	private String clientId = "AdTn2zuHD-OtbdQR1zlP0j1wetpySRAeZRAQMDSG7QB0J3uc3nk769_YychiLAKjxQwjbUmrPBI_f2S_";
-	@Value("${PAYPAL_CLIENT_SECRET}")
-	private String clientSecret = "EBt5qlxE2gZ__wUhpwvM1pOpYi3qdI9OAE6fxHNGGrJzVRHL6ocjkqeP7u9WqYnE_MW_YSPpsfD6X9xu";
+	@Value("${paypal.client.id}")
+	private String clientId;
+	@Value("${paypal.client.secret}")
+	private String clientSecret;
 
 	PayPalHttpClient client = null;
 
-	private PayPalClient() {
+	private PayPalClient(@Value("${paypal.client.id}") String clientId,
+						 @Value("${paypal.client.secret}") String clientSecret) {
 		/**
 		 * Setting up PayPal SDK environment with PayPal Access credentials. For demo
 		 * purpose, we are using SandboxEnvironment. In production this will be
 		 * LiveEnvironment.
 		 */
 		PayPalEnvironment environment = new PayPalEnvironment.Sandbox(clientId, clientSecret);
-//	System.getProperty("PAYPAL_CLIENT_ID") != null ? System.getProperty("PAYPAL_CLIENT_ID")
-//			: "<<PAYPAL-CLIENT-ID>>",
-//			System.getProperty("PAYPAL_CLIENT_SECRET") != null ? System.getProperty("PAYPAL_CLIENT_SECRET")
-//			: "<<PAYPAL-CLIENT-SECRET>>"
 
 		/**
 		 * PayPal HTTP client instance with environment which has access credentials

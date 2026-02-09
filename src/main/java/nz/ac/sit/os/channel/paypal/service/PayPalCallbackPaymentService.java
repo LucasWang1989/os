@@ -2,23 +2,16 @@ package nz.ac.sit.os.channel.paypal.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.paypal.api.payments.CreditCard;
 import com.paypal.api.payments.Event;
 import com.paypal.base.Constants;
 import com.paypal.base.rest.APIContext;
-import com.paypal.base.rest.PayPalRESTException;
 import com.paypal.http.HttpResponse;
 import com.paypal.orders.*;
 import nz.ac.sit.os.channel.paypal.remote.PayPalRemoteAPI;
-import nz.ac.sit.os.common.util.AmountUtil;
-import nz.ac.sit.os.common.util.DateUtil;
 import nz.ac.sit.os.domain.order.ChannelOrderModel;
+import nz.ac.sit.os.service.trade.CallbackPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.util.Map;
 
 
@@ -29,11 +22,12 @@ import java.util.Map;
  * @date: 2022-10-26 14:02
  **/
 @Service
-public class PayPalCallbackPayService {
+public class PayPalCallbackPaymentService implements CallbackPaymentService {
 
     @Autowired
     private PayPalRemoteAPI payPalRemoteAPI;
 
+    @Override
     public ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) {
         // Generate a result object
         ChannelOrderModel channelOrderResult = new ChannelOrderModel();

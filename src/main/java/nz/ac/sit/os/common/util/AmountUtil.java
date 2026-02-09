@@ -7,7 +7,7 @@ public class AmountUtil {
 
     public static final String CURRENCY_FEN_REGEX = "\\-?[0-9]+";
 
-    public static String changeF2Y(Long amount) throws Exception {
+    public static String convertCent2Dollar(Long amount) throws Exception {
         if (!amount.toString().matches(CURRENCY_FEN_REGEX)) {
             throw new Exception("Amount format error");
         }
@@ -40,18 +40,18 @@ public class AmountUtil {
         }
     }
 
-    public static String changeF2Y(String amount) throws Exception {
+    public static String convertCent2Dollar(String amount) throws Exception {
         if (!amount.matches(CURRENCY_FEN_REGEX)) {
             throw new Exception("Amount format error");
         }
         return BigDecimal.valueOf(Long.valueOf(amount)).divide(new BigDecimal(100)).toString();
     }
 
-    public static String changeY2F(Long amount) {
+    public static String convertDollar2Cent(Long amount) {
         return BigDecimal.valueOf(amount).multiply(new BigDecimal(100)).toString();
     }
 
-    public static String changeY2F(String amount) {
+    public static String convertDollar2Cent(String amount) {
         String currency = amount.replaceAll("\\$|\\￥|\\,", "");
         int index = currency.indexOf(".");
         int length = currency.length();
@@ -69,7 +69,7 @@ public class AmountUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(new BigDecimal(changeF2Y("1")));
+        System.out.println(new BigDecimal(convertCent2Dollar("1")));
 
     }
 }

@@ -8,6 +8,7 @@ import nz.ac.sit.os.common.util.DateUtil;
 import nz.ac.sit.os.domain.order.ChannelOrderModel;
 import nz.ac.sit.os.service.trade.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,9 @@ public class PayPalPaymentService implements PaymentService {
 
     @Autowired
     private PayPalRemoteAPI payPalRemoteAPI;
+
+    @Value("${webhook.url}")
+    private String callbackUrl;
 
     /**
      * Method to generate sample create order body with <b>CAPTURE</b> intent
@@ -41,7 +45,7 @@ public class PayPalPaymentService implements PaymentService {
                 .brandName("SIT Cafe Inc.")
                 .landingPage("BILLING")
                 .cancelUrl("https://www.example.com")
-                .returnUrl("https://326828j1n4.goho.co/customer/fetch-ordrer-detail?orderNo=" + channelOrder.getPayOrderNo())
+                .returnUrl(callbackUrl + "/customer/fetch-ordrer-detail?orderNo=" + channelOrder.getPayOrderNo())
                 .userAction("CONTINUE")
                 .shippingPreference("NO_SHIPPING");
         orderRequest.applicationContext(applicationContext);
@@ -52,7 +56,7 @@ public class PayPalPaymentService implements PaymentService {
             PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest()
                     .referenceId(channelOrder.getPayOrderNo())//PUHF
                     .description("Dishes").customId("CUST-Dishes").softDescriptor("")
-                    .amountWithBreakdown(new AmountWithBreakdown().currencyCode("NZD").value(AmountUtil.changeF2Y(channelOrder.getPayAmount().toString()))
+                    .amountWithBreakdown(new AmountWithBreakdown().currencyCode("NZD").value(AmountUtil.convertCent2Dollar(channelOrder.getPayAmount().toString()))
                                 /*.amountBreakdown(new AmountBreakdown().itemTotal(new Money().currencyCode("NZD").value("180.00"))
                                 .shipping(new Money().currencyCode("NZD").value("20.00"))
                                 .handling(new Money().currencyCode("NZD").value("10.00"))

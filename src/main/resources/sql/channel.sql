@@ -45,3 +45,24 @@ create table os_channel_refund_order
     comment 'Channel Refund Order Table' charset = utf8;
 
 
+create table os_channel_merc_info
+(
+    F_CHANNEL_NO        varchar(20)             not null comment 'Channel No',
+    F_PAYMENT_TYPE      varchar(6)              not null comment 'payment type',
+    F_CHANNEL_MERC_ID   varchar(60)             not null comment 'Merchant No from channel',
+    F_SSD_KEY           varchar(3000)           null comment 'Key of sensitive data protection',
+    F_MAC_KEY           varchar(3000)           null comment 'MacKey',
+    F_CLEAR_TYPE        decimal(20, 5)          null comment 'Liquidation type 0-D0；1-T1',
+    F_MERC_FEE          int(10)                 null comment 'Transaction fee',
+    F_MERC_RATE         decimal(20, 5)          null comment 'Merchant rate',
+    F_MERC_STATUS       char                    not null comment 'Merchant status 0-Inactive 1-Active',
+    F_IMPORT_STATUS     char                    null comment 'Merchant import status 0-Not yet；1-Success',
+    F_IMPORT_RESULT     varchar(100)            null comment 'Merchant import result',
+    F_UPDATE_TIME       varchar(32)             not null comment 'Record updated time',
+    F_CREATED_TIME      varchar(32)             not null comment 'Record created time',
+    F_EXT_FLAG          char                    not null comment 'Acquire extension param flag：0-No 1-Yes',
+    F_CHANNEL_ORDER_FIX varchar(30)             null comment 'Prefix of order No',
+    primary key (F_CHANNEL_NO, F_PAYMENT_TYPE, F_CHANNEL_MERC_ID)
+)
+    comment 'Information of channel merchant' charset = utf8;
+

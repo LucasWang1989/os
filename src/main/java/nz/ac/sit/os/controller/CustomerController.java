@@ -11,10 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -35,7 +42,35 @@ public class CustomerController {
     private OrderService orderService;
 
     @RequestMapping("/fetch-menu")
-    public ModelAndView fetchProduct(@RequestParam Integer tableNo) {
+    public ModelAndView fetchProduct(@RequestParam Integer tableNo,
+                                     HttpServletRequest req,
+                                     HttpServletResponse res
+                                     ) {
+
+        String URI = req.getRequestURI();
+        StringBuffer URL = req.getRequestURL();
+        String contextPath = req.getContextPath();
+
+        ServletContext cont = req.getServletContext();
+        int minor = cont.getMinorVersion();
+        int major = cont.getMajorVersion();
+        String info = cont.getServerInfo();
+
+        String appNm = cont.getServletContextName();
+        String cntPath = cont.getContextPath();
+        Enumeration<String> pns =  cont.getInitParameterNames();
+
+        String realPath = cont.getRealPath("admin/images/like.png");
+        try {
+            URL resr = cont.getResource("admin/orders-detail-chef.jsp");
+            InputStream resrIn = cont.getResourceAsStream("admin/orders-detail-chef.jsp");
+            String mime = cont.getMimeType("webapp/admin/images/like.png");
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+
         List<ProductModel> products = productDefMapper.fetchProduct();
 
         ModelAndView mav = new ModelAndView("/customer/menu.jsp");

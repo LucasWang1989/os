@@ -67,7 +67,7 @@ public class AdminController {
 
         ProductModel product = new ProductModel();
         product.setName(name);
-        product.setPrice(new BigInteger(AmountUtil.changeY2F(price)));
+        product.setPrice(new BigInteger(AmountUtil.convertDollar2Cent(price)));
         product.setImagePath(imagePath);
         product.setDesc(desc);
         productDefService.addProduct(product);

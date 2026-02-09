@@ -1,11 +1,9 @@
 package nz.ac.sit.os.controller;
 
-import nz.ac.sit.os.channel.paypal.service.PayPalCallbackPayService;
-import nz.ac.sit.os.common.util.DateUtil;
+import nz.ac.sit.os.channel.paypal.service.PayPalCallbackPaymentService;
 import nz.ac.sit.os.domain.order.ChannelOrderModel;
 import nz.ac.sit.os.domain.order.MercOrderModel;
 import nz.ac.sit.os.mapper.ChannelPayOrderMapper;
-import nz.ac.sit.os.mapper.MercOrderMapper;
 import nz.ac.sit.os.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +30,7 @@ import java.util.Map;
 public class WebhookController {
 
     @Autowired
-    private PayPalCallbackPayService payPalCallbackPayService;
+    private PayPalCallbackPaymentService payPalCallbackPaymentService;
     @Autowired
     private ChannelPayOrderMapper channelPayOrderMapper;
     @Autowired
@@ -82,9 +80,9 @@ public class WebhookController {
         }
         body = stringBuilder.toString();
 
-        ChannelOrderModel channelOrderResult = payPalCallbackPayService.checkoutOrderApprovedCallback(map, body);
+        ChannelOrderModel channelOrderResult = payPalCallbackPaymentService.checkoutOrderApprovedCallback(map, body);
 
-        // Will move to order service latter
+        // Will move to order service later
         channelPayOrderMapper.updateChannelOrderByChannelOrderNo(channelOrderResult);
         ChannelOrderModel channelOrder = channelPayOrderMapper.acquireChannelOrderByChannelOrderNo(channelOrderResult);
 
