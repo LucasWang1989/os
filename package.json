@@ -1,0 +1,14 @@
+{
+  "name": "os",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:customer": "npm --workspace apps/customer-web run dev",
+    "dev:admin": "npm --workspace apps/admin-web run dev",
+    "build:customer": "npm --workspace apps/customer-web run build",
+    "build:admin": "npm --workspace apps/admin-web run build"
+  }
+}
