@@ -11,18 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: os
@@ -31,7 +23,7 @@ import java.util.List;
  * @date: 2022-10-24 14:09
  **/
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 public class CustomerController {
 
     @Autowired
@@ -41,16 +33,16 @@ public class CustomerController {
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping("/fetch-menu")
-    public ModelAndView fetchProduct(@RequestParam Integer tableNo) {
+    @GetMapping("/menus")
+    public Map<String, Object> fetchProduct(@RequestParam Integer tableNo) {
 
         List<ProductModel> products = productDefMapper.fetchProduct();
 
-        ModelAndView mav = new ModelAndView("/customer/menu.jsp");
-        mav.addObject("products", products);
-        mav.addObject("tableNo", tableNo);
+        Map<String, Object> res = new HashMap<>();
+        res.put("tableNo", tableNo);
+        res.put("products", products);
 
-        return mav;
+        return res;
     }
 
     @RequestMapping("/checkout")
