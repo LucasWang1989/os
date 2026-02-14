@@ -14,7 +14,7 @@
 /*    background-size: auto auto;*/
 /*    height: 100%;*/
 /*    background-size: 100% auto;*/
-}
+/*}*/
 body
 {
     line-height: 1.6;
@@ -1035,10 +1035,10 @@ section .show{
 	height: 30px;
 	top: 10px;
 }
-.paytype .wxpay {
-	background: url(../img/wxpay.jpg) 0 center no-repeat;
-	background-size: 36px;
-}
+/*.paytype .wxpay {*/
+/*	background: url(../img/wxpay.jpg) 0 center no-repeat;*/
+/*	background-size: 36px;*/
+/*}*/
 /*************************tof********************/
 .lists-tof {
 	width: 100%;
