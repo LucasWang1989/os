@@ -4,6 +4,7 @@ import {loadTable} from "../services/cartStorage";
 import CartHeader from "../components/cart/CartHeader";
 import CartItemList from "../components/cart/CartItemList";
 import CartCheckoutBar from "../components/cart/CartCheckoutBar";
+import {checkout} from "../services/checkoutApi.js";
 
 export default function CartContainer() {
     const { cart, add, remove, totalCount } = useCart();
@@ -33,29 +34,10 @@ export default function CartContainer() {
     }, [cart]);
 
 
-    const checkout = async () => {
-        const payload = {
-            tableNo,
-            items: cartLines.map((x) => ({
-                id: x.product.id,
-                amount: x.qty,
-                // 可选：给后端更完整信息
-                name: x.product.name,
-                price: x.product.price, // 分
-                imagePath: x.product.imagePath,
-            })),
-        };
-
+    const handleCheckout = async () => {
         try {
-            const res = await fetch("/checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json;charset=utf-8" },
-                body: JSON.stringify(payload),
-            });
-
-            if (!res.ok) throw new Error("Checkout failed");
-
-            window.location.href = "/order_success.html";
+            const data = await checkout(tableNo, cartLines);
+            window.location.replace(data.payUrl);
         } catch (e) {
             console.error(e);
             alert("Checkout failed. Please try again.");
@@ -78,7 +60,7 @@ export default function CartContainer() {
                 <CartCheckoutBar
                     totalMoney={totalMoney}
                     disabled={totalCount === 0}
-                    onCheckout={checkout}
+                    onCheckout={handleCheckout}
                 />
             </div>
         </div>
