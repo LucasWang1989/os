@@ -1,19 +1,14 @@
 package nz.ac.sit.os.api;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import nz.ac.sit.os.api.dto.CheckoutRequest;
 import nz.ac.sit.os.persistence.product.ProductModel;
 import nz.ac.sit.os.mapper.ProductDefMapper;
 import nz.ac.sit.os.application.order.OrderService;
 import nz.ac.sit.os.application.trade.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -45,42 +40,43 @@ public class CustomerController {
         return res;
     }
 
-    @RequestMapping("/checkout")
-    public ModelAndView checkOut(String data, String tableNo) {
-        try {
-            String decodeData = URLDecoder.decode(data,"UTF-8");
-            decodeData = "["+decodeData+"]";
+    @PostMapping(value = "/checkout/orders", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, String> checkOut(@RequestBody CheckoutRequest req) {
 
-            List<ProductModel> dishes = new ArrayList<>();
-            JSONArray jsa = JSON.parseArray(decodeData);
-            for (int i = 0; i < jsa.size(); i++) {
-                JSONObject jo = jsa.getJSONObject(i);
-                if(jo.isEmpty()) continue;
+        String tableNo = req.getTableNo();
+        List<CheckoutRequest.CheckoutItem> items = req.getItems();
 
-                ProductModel productModel = new ProductModel();
-                productModel.setId((String)jo.get("id"));
-                productModel.setPrice(new BigInteger((String)jo.get("price"))
-                        .multiply(new BigInteger("100")));
-                productModel.setDishNumber(new BigInteger(jo.get("amount").toString()));
-                dishes.add(productModel);
+        if (tableNo == null || tableNo.isBlank() || items == null || items.isEmpty()) {
+            return Map.of("errorMsg", "Table numbers or dish items are empty. Please try again.");
+        }
+
+        List<ProductModel> dishes = new ArrayList<>();
+        for (CheckoutRequest.CheckoutItem it : items) {
+            if (it == null || it.getId() == null || it.getAmount() == null) continue;
+
+            ProductModel productModel = new ProductModel();
+            productModel.setId(it.getId());
+
+            if (it.getPrice() != null) {
+                productModel.setPrice(BigInteger.valueOf(it.getPrice()));
             }
 
-            String payUrl = tradeService.createOrder(tableNo, dishes);
-            ModelAndView mav = new ModelAndView(new RedirectView(payUrl));
-            return mav;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            productModel.setDishNumber(BigInteger.valueOf(it.getAmount()));
+            dishes.add(productModel);
         }
-        return null;
+
+        String payUrl = tradeService.createOrder(tableNo, dishes);
+        return Map.of("payUrl", payUrl);
     }
 
-    @RequestMapping("/fetch-ordrer-detail")
-    public ModelAndView fetchOrderDetail(@RequestParam String orderNo) {
+    @GetMapping("/checkout/orders/{orderNo}")
+    public Map<String, Object> fetchOrderDetail(@PathVariable String orderNo) {
 
         List<ProductModel> orderProducts = orderService.fetchOrderProduct(orderNo);
 
-        ModelAndView mav = new ModelAndView("/customer/orders-detail.jsp");
-        mav.addObject("orderProducts", orderProducts);
-        return mav;
+        Map<String, Object> res = new HashMap<>();
+        res.put("orderProducts", orderProducts);
+        return res;
     }
+
 }

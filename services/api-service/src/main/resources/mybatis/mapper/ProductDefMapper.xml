@@ -10,8 +10,8 @@
         <result column="F_IMG_PATH" property="imagePath"/>
         <result column="F_UPDATE_DATE" property="updateDate"/>
         <result column="F_UPDATE_TIME" property="updateTime"/>
-        <result column="F_CREATED_DATE" property="createdDate"/>
-        <result column="F_CREATED_TIME" property="createdTime"/>
+        <result column="F_CREATED_DATE" property="orderCreatedDate"/>
+        <result column="F_CREATED_TIME" property="orderCreatedTime"/>
         <result column="DISH_NUMBER" property="dishNumber"/>
         <result column="F_ORDER_NO" property="orderNo"/>
         <result column="F_ORDER_STATUS" property="orderStatus"/>
@@ -47,7 +47,9 @@
         pd.F_NAME,
         pd.F_PRICE,
         pd.F_DESC,
-        pd.F_IMG_PATH
+        pd.F_IMG_PATH,
+        op.F_CREATED_DATE,
+        op.F_CREATED_TIME
         from os_order_product op, os_product_def pd, os_merc_order mo
         where op.F_PRODUCT_ID = pd.F_ID
         and op.F_ORDER_NO = mo.F_ORDER_NO

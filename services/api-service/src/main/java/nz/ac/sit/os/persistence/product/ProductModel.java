@@ -19,4 +19,6 @@ public class ProductModel extends ProductEntity{
     private String orderStatus;
     private String cookingStatus;
     private String tableNo;
+    private String orderCreatedDate;
+    private String orderCreatedTime;
 }

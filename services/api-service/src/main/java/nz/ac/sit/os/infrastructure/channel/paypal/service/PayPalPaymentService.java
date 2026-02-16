@@ -45,7 +45,7 @@ public class PayPalPaymentService implements PaymentService {
                 .brandName("SIT Cafe Inc.")
                 .landingPage("BILLING")
                 .cancelUrl("https://www.example.com")
-                .returnUrl(callbackUrl + "/customer/fetch-ordrer-detail?orderNo=" + channelOrder.getPayOrderNo())
+                .returnUrl(callbackUrl + "/receipt?orderNo=" + channelOrder.getPayOrderNo())
                 .userAction("CONTINUE")
                 .shippingPreference("NO_SHIPPING");
         orderRequest.applicationContext(applicationContext);
