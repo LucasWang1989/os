@@ -18,14 +18,13 @@ services:
     depends_on:
       - mysql
     environment:
-      SERVER_PORT: 8041
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Pacific/Auckland
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_FLYWAY_ENABLED: "false"
       TZ: Pacific/Auckland
-    expose:
-      - "8041"
+      expose:
+        - "8041"
 #    ports:
 #      - "${BACKEND_PORT}:8041"
     restart: unless-stopped
@@ -49,7 +48,7 @@ services:
       - backend
     ports:
       - "80:80"
-
+      
       # - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
