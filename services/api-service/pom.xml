@@ -60,6 +60,11 @@
             <version>2.2.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- PayPal SDK (Checkout API) -->
         <dependency>
             <groupId>com.paypal.sdk</groupId>
@@ -67,7 +72,7 @@
             <version>2.0.0</version>
         </dependency>
 
-        <!-- PayPal REST API (老接口) -->
+        <!-- PayPal REST API (old) -->
         <dependency>
             <groupId>com.paypal.sdk</groupId>
             <artifactId>rest-api-sdk</artifactId>
@@ -95,7 +100,17 @@
             <version>8.0.33</version>
         </dependency>
 
-        <!-- JSP 支持 -->
+        <!-- database migration -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+
+        <!-- JSP support -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
@@ -109,7 +124,7 @@
             <version>1.2.47</version>
         </dependency>
 
-        <!-- Spring Boot DevTools（开发环境） -->
+        <!-- Spring Boot DevTools（dev env.） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
