@@ -1,0 +1,2 @@
+-- create database named os_db
+use os_db;
