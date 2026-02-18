@@ -35,11 +35,14 @@ This project demonstrates:
 
 👉 http://scan2dine.store/menu?tableNo=1
 
-### Scan QR Code
+### 📱 Scan to Order
 
 <p align="center">
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=http://scan2dine.store/menu?tableNo=1" width="220"/>
+  <img src="apps/customer-web/public/assets/img/qr-demo.png" width="420" style="margin-right:20px;" />
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=http://scan2dine.store/menu?tableNo=1" width="220" />
 </p>
+
+Scan the QR code at your table to start ordering.
 
 ---
 
