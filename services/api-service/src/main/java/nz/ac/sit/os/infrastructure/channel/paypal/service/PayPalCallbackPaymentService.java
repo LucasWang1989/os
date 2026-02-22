@@ -2,15 +2,13 @@ package nz.ac.sit.os.infrastructure.channel.paypal.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.paypal.api.payments.Event;
-import com.paypal.base.Constants;
-import com.paypal.base.rest.APIContext;
 import com.paypal.http.HttpResponse;
 import com.paypal.orders.*;
 import nz.ac.sit.os.infrastructure.channel.paypal.remote.PayPalRemoteAPI;
 import nz.ac.sit.os.persistence.order.ChannelOrderModel;
 import nz.ac.sit.os.application.trade.CallbackPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 
@@ -27,26 +25,27 @@ public class PayPalCallbackPaymentService implements CallbackPaymentService {
     @Autowired
     private PayPalRemoteAPI payPalRemoteAPI;
 
+    @Value("${paypal.client.id}")
+    String clientId;
+
+    @Value("${paypal.client.secret}")
+    String clientSecret;
+
     @Override
     public ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) {
         // Generate a result object
         ChannelOrderModel channelOrderResult = new ChannelOrderModel();
 
         try {
-            // ### Api Context
-            APIContext apiContext = new APIContext("AdTn2zuHD-OtbdQR1zlP0j1wetpySRAeZRAQMDSG7QB0J3uc3nk769_YychiLAKjxQwjbUmrPBI_f2S_",
-                    "EBt5qlxE2gZ__wUhpwvM1pOpYi3qdI9OAE6fxHNGGrJzVRHL6ocjkqeP7u9WqYnE_MW_YSPpsfD6X9xu", "sandbox");
-            // Set the webhookId that you received when you created this webhook.
-            apiContext.addConfiguration(Constants.PAYPAL_WEBHOOK_ID, "6FJ32264S1231642V");
-            Boolean result = Event.validateReceivedEvent(apiContext, headers, requestBody);
-            System.out.println("Result is " + result);
-//            LOGGER.info("Webhook Validated:  " + result);
+            JSONObject callbackData = JSON.parseObject(JSON.parseObject(requestBody).get("resource").toString());
+            if ("APPROVED".equals(callbackData.get("status").toString())
+                    && "CAPTURE".equals(callbackData.get("intent").toString())) {
 
-            if(result) {
-                JSONObject callbackData = JSON.parseObject(JSON.parseObject(requestBody).get("resource").toString());
-                if ("APPROVED".equals(callbackData.get("status").toString())
-                        && "CAPTURE".equals(callbackData.get("intent").toString())) {
-                    HttpResponse<Order> captureResp = payPalRemoteAPI.captureOrder(callbackData.get("id").toString(), true);
+                String orderId = callbackData.get("id").toString();
+
+                HttpResponse<Order> res = payPalRemoteAPI.getOrder(orderId);
+                if("APPROVED".equals(res.result().status())) {
+                    HttpResponse<Order> captureResp = payPalRemoteAPI.captureOrder(orderId, true);
 
                     String payStatus = captureResp.result().status();
                     //0-No pay; 1-Paid; 2-Payment failed
@@ -72,16 +71,9 @@ public class PayPalCallbackPaymentService implements CallbackPaymentService {
                     channelOrderResult.setChannelPayOrderNo(captureResp.result().id());
                 }
             }
-
-//            ResultPrinter.addResult(req, resp, "Webhook Validated:  ", CreditCard.getLastRequest(),
-//                    CreditCard.getLastResponse(), null);
         } catch (Exception e) {
-//            ResultPrinter.addResult(req, resp, "Webhook Validated:  ", CreditCard.getLastRequest(),
-//                    null, e.getMessage());
+            System.out.println("Capture Exception:" + e);
         }
-
-
-
         return channelOrderResult;
     }
 

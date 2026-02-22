@@ -72,13 +72,6 @@
             <version>2.0.0</version>
         </dependency>
 
-        <!-- PayPal REST API (old) -->
-        <dependency>
-            <groupId>com.paypal.sdk</groupId>
-            <artifactId>rest-api-sdk</artifactId>
-            <version>1.14.0</version>
-        </dependency>
-
         <!-- Apache Commons Lang -->
         <dependency>
             <groupId>org.apache.commons</groupId>

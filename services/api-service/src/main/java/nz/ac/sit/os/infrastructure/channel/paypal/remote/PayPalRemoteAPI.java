@@ -105,11 +105,13 @@ public class PayPalRemoteAPI {
      *
      * @throws IOException Exceptions from API if any
      */
-    public void getOrder(String orderId) throws IOException {
+    public HttpResponse<Order> getOrder(String orderId) throws IOException {
         OrdersGetRequest request = new OrdersGetRequest(orderId);
         HttpResponse<Order> response = payPalClient.client().execute(request);
         System.out.println("Full response body:");
         System.out.println(new JSONObject(new Json().serialize(response.result())).toString(4));
+
+        return response;
     }
 
 
