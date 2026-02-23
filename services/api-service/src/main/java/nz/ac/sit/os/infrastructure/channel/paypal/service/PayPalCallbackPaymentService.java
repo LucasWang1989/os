@@ -32,48 +32,53 @@ public class PayPalCallbackPaymentService implements CallbackPaymentService {
     String clientSecret;
 
     @Override
-    public ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) {
+    public ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) throws Exception {
         // Generate a result object
         ChannelOrderModel channelOrderResult = new ChannelOrderModel();
 
-        try {
-            JSONObject callbackData = JSON.parseObject(JSON.parseObject(requestBody).get("resource").toString());
-            if ("APPROVED".equals(callbackData.get("status").toString())
-                    && "CAPTURE".equals(callbackData.get("intent").toString())) {
+        //            JSONObject callbackData = JSON.parseObject(JSON.parseObject(requestBody).get("resource").toString());
+        JSONObject callbackData = JSON.parseObject(requestBody);
+        JSONObject resource = JSON.parseObject(callbackData.get("resource").toString());
+        String eventType= callbackData.get("event_type").toString();
 
-                String orderId = callbackData.get("id").toString();
-
-                HttpResponse<Order> res = payPalRemoteAPI.getOrder(orderId);
-                if("APPROVED".equals(res.result().status())) {
-                    HttpResponse<Order> captureResp = payPalRemoteAPI.captureOrder(orderId, true);
-
-                    String payStatus = captureResp.result().status();
-                    //0-No pay; 1-Paid; 2-Payment failed
-                    switch (payStatus) {
-                        case "CREATED":
-                        case "SAVED":
-                        case "PAYER_ACTION_REQUIRED":
-                            channelOrderResult.setPayStatus("0");
-                            break;
-                        case "APPROVED":
-                            channelOrderResult.setPayStatus("1");
-                            break;
-                        case "VOIDED":
-                            channelOrderResult.setPayStatus("2");
-                            break;
-                        case "COMPLETED":
-                            channelOrderResult.setPayStatus("1");
-                            break;
-                        default:
-                            channelOrderResult.setPayStatus("0");
-                    }
-//                    channelOrderResult.setPayTime(DateUtil.getYyyyMMddhhmmss(captureResp.result().createTime()));
-                    channelOrderResult.setChannelPayOrderNo(captureResp.result().id());
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Capture Exception:" + e);
+        if (!("CHECKOUT.ORDER.APPROVED".equals(eventType)
+                && "APPROVED".equals(resource.get("status").toString())
+                && "CAPTURE".equals(resource.get("intent").toString()))) {
+            System.out.println("Unsubscribed event type:" + eventType);
+            return null;
         }
+
+        String orderId = resource.get("id").toString();
+        HttpResponse<Order> res = payPalRemoteAPI.getOrder(orderId);
+
+        if("APPROVED".equals(res.result().status())) {
+            HttpResponse<Order> captureResp = payPalRemoteAPI.captureOrder(orderId, true);
+
+            String payStatus = captureResp.result().status();
+            //0-No pay; 1-Paid; 2-Payment failed
+            switch (payStatus) {
+                case "CREATED":
+                case "SAVED":
+                case "PAYER_ACTION_REQUIRED":
+                    channelOrderResult.setPayStatus("0");
+                    break;
+                case "APPROVED":
+                    channelOrderResult.setPayStatus("1");
+                    break;
+                case "VOIDED":
+                    channelOrderResult.setPayStatus("2");
+                    break;
+                case "COMPLETED":
+                    channelOrderResult.setPayStatus("1");
+                    break;
+                default:
+                    channelOrderResult.setPayStatus("0");
+            }
+//                    channelOrderResult.setPayTime(DateUtil.getYyyyMMddhhmmss(captureResp.result().createTime()));
+            channelOrderResult.setChannelPayOrderNo(captureResp.result().id());
+        }
+
+
         return channelOrderResult;
     }
 

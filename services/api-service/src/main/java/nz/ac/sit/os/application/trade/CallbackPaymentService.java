@@ -13,6 +13,6 @@ import java.util.Map;
  **/
 public interface CallbackPaymentService {
 
-    ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody);
+    ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) throws Exception;
 
 }

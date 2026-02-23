@@ -1,10 +1,6 @@
 package nz.ac.sit.os.api;
 
-import nz.ac.sit.os.infrastructure.channel.paypal.service.PayPalCallbackPaymentService;
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
-import nz.ac.sit.os.persistence.order.MercOrderModel;
-import nz.ac.sit.os.mapper.ChannelPayOrderMapper;
-import nz.ac.sit.os.application.order.OrderService;
+import nz.ac.sit.os.application.order.CaptureOrderPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,13 +26,7 @@ import java.util.Map;
 public class WebhookController {
 
     @Autowired
-    private PayPalCallbackPaymentService payPalCallbackPaymentService;
-    @Autowired
-    private ChannelPayOrderMapper channelPayOrderMapper;
-    @Autowired
-    private OrderService orderService;
-
-
+    private CaptureOrderPaymentService captureOrderPaymentService;
 
     @RequestMapping("/checkout-order-approved")
     public ModelAndView checkoutOrderApproved(HttpServletRequest request, HttpServletResponse resp) {
@@ -79,17 +69,8 @@ public class WebhookController {
             }
         }
         body = stringBuilder.toString();
+        captureOrderPaymentService.handle(map, body);
 
-        ChannelOrderModel channelOrderResult = payPalCallbackPaymentService.checkoutOrderApprovedCallback(map, body);
-
-        // Will move to order service later
-        channelPayOrderMapper.updateChannelOrderByChannelOrderNo(channelOrderResult);
-        ChannelOrderModel channelOrder = channelPayOrderMapper.acquireChannelOrderByChannelOrderNo(channelOrderResult);
-
-        MercOrderModel mercOrder = new MercOrderModel();
-        mercOrder.setOrderNo(channelOrder.getPayOrderNo());
-        mercOrder.setPayStatus(channelOrderResult.getPayStatus());
-        orderService.updateMercOrder(mercOrder);
         return null;
     }
 }
