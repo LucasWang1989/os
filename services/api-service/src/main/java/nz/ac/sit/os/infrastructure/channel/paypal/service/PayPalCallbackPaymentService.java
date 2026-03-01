@@ -4,14 +4,19 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.paypal.http.HttpResponse;
 import com.paypal.orders.*;
+import lombok.extern.slf4j.Slf4j;
+import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelException;
+import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelPayloadException;
+import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelTransportException;
 import nz.ac.sit.os.infrastructure.channel.paypal.remote.PayPalRemoteAPI;
 import nz.ac.sit.os.persistence.order.ChannelOrderModel;
 import nz.ac.sit.os.application.trade.CallbackPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.Map;
 
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @program: os
@@ -19,9 +24,9 @@ import java.util.Map;
  * @author: wangliang
  * @date: 2022-10-26 14:02
  **/
+@Slf4j
 @Service
 public class PayPalCallbackPaymentService implements CallbackPaymentService {
-
     @Autowired
     private PayPalRemoteAPI payPalRemoteAPI;
 
@@ -32,54 +37,90 @@ public class PayPalCallbackPaymentService implements CallbackPaymentService {
     String clientSecret;
 
     @Override
-    public ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) throws Exception {
-        // Generate a result object
-        ChannelOrderModel channelOrderResult = new ChannelOrderModel();
+    public Optional<ChannelOrderModel> checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) throws PaymentChannelException {
+        final JSONObject callbackData;
+        final JSONObject resource;
+        final String eventType;
+        final String status;
+        final String intent;
+        final String orderId;
 
-        //            JSONObject callbackData = JSON.parseObject(JSON.parseObject(requestBody).get("resource").toString());
-        JSONObject callbackData = JSON.parseObject(requestBody);
-        JSONObject resource = JSON.parseObject(callbackData.get("resource").toString());
-        String eventType= callbackData.get("event_type").toString();
+        try {
+            callbackData = JSON.parseObject(requestBody);
+            Object resourceObj = callbackData.get("resource");
+            if (resourceObj == null) {
+                throw new PaymentChannelPayloadException("Webhook payload missing 'resource'");
+            }
+
+            resource = JSON.parseObject(String.valueOf(callbackData.get("resource")));
+            eventType = String.valueOf(callbackData.get("event_type"));
+            status = String.valueOf(resource.get("status"));
+            intent = String.valueOf(resource.get("intent"));
+            orderId = String.valueOf(resource.get("id"));
+        }catch (PaymentChannelPayloadException pcpe) {
+            throw pcpe;
+        }catch (Exception e) {
+            throw new PaymentChannelPayloadException("Invalid webhook payload. body=" + requestBody, e);
+        }
 
         if (!("CHECKOUT.ORDER.APPROVED".equals(eventType)
-                && "APPROVED".equals(resource.get("status").toString())
-                && "CAPTURE".equals(resource.get("intent").toString()))) {
-            System.out.println("Unsubscribed event type:" + eventType);
-            return null;
+                && "APPROVED".equals(status)
+                && "CAPTURE".equals(intent))) {
+            log.info("Mismatched webhook event: eventType="+eventType+", " +
+                    "intent="+intent+", status="+status );
+            return Optional.empty();
         }
 
-        String orderId = resource.get("id").toString();
-        HttpResponse<Order> res = payPalRemoteAPI.getOrder(orderId);
+        if (orderId == null || orderId.isBlank()) {
+            throw new PaymentChannelPayloadException("Webhook payload missing order id. resource="+resource);
+        }
 
-        if("APPROVED".equals(res.result().status())) {
-            HttpResponse<Order> captureResp = payPalRemoteAPI.captureOrder(orderId, true);
-
-            String payStatus = captureResp.result().status();
-            //0-No pay; 1-Paid; 2-Payment failed
-            switch (payStatus) {
-                case "CREATED":
-                case "SAVED":
-                case "PAYER_ACTION_REQUIRED":
-                    channelOrderResult.setPayStatus("0");
-                    break;
-                case "APPROVED":
-                    channelOrderResult.setPayStatus("1");
-                    break;
-                case "VOIDED":
-                    channelOrderResult.setPayStatus("2");
-                    break;
-                case "COMPLETED":
-                    channelOrderResult.setPayStatus("1");
-                    break;
-                default:
-                    channelOrderResult.setPayStatus("0");
+        final HttpResponse<Order> res;
+        final HttpResponse<Order> captureResp;
+        try {
+            res = payPalRemoteAPI.getOrder(orderId);
+            Order order = res == null ? null : res.result();
+            if (order == null) {
+                throw new PaymentChannelTransportException("PayPal getOrder returned null result. orderId=" + orderId);
             }
-//                    channelOrderResult.setPayTime(DateUtil.getYyyyMMddhhmmss(captureResp.result().createTime()));
-            channelOrderResult.setChannelPayOrderNo(captureResp.result().id());
+
+            if (!"APPROVED".equals(order.status())) {
+                log.info("PayPal order status is not approved. orderId="+orderId+", status=" + order.status());
+                return Optional.empty();
+            }
+
+            captureResp = payPalRemoteAPI.captureOrder(orderId, true);
+        }catch (PaymentChannelTransportException pce) {
+           throw pce;
+        }catch (Exception e) {
+            throw new PaymentChannelTransportException("PayPal API call failed. orderId="+orderId+", eventType=" + eventType, e);
         }
 
+        // Generate a result object
+        ChannelOrderModel channelOrderResult = new ChannelOrderModel();
+        String internalPayStatus;
 
-        return channelOrderResult;
+        //0-No pay; 1-Paid; 2-Payment failed
+        switch (captureResp.result().status()) {
+            case "CREATED":
+            case "SAVED":
+            case "PAYER_ACTION_REQUIRED":
+                internalPayStatus = "0";
+                break;
+            case "APPROVED":
+            case "COMPLETED":
+                internalPayStatus = "1";
+                break;
+            case "VOIDED":
+                internalPayStatus = "2";
+                break;
+            default:
+                internalPayStatus = "0";
+        }
+        channelOrderResult.setPayStatus(internalPayStatus);
+        channelOrderResult.setChannelPayOrderNo(captureResp.result().id());
+
+        return Optional.of(channelOrderResult);
     }
 
     public static void main(String[] args) {

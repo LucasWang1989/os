@@ -1,8 +1,9 @@
 package nz.ac.sit.os.application.trade;
 
+import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelException;
 import nz.ac.sit.os.persistence.order.ChannelOrderModel;
-
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @program: os
@@ -13,6 +14,6 @@ import java.util.Map;
  **/
 public interface CallbackPaymentService {
 
-    ChannelOrderModel checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) throws Exception;
+    Optional<ChannelOrderModel> checkoutOrderApprovedCallback(Map<String, String> headers, String requestBody) throws PaymentChannelException;
 
 }

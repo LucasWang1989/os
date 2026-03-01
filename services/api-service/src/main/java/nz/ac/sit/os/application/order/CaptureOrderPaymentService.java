@@ -1,13 +1,18 @@
 package nz.ac.sit.os.application.order;
 
+import nz.ac.sit.os.common.error.BizException;
+import nz.ac.sit.os.common.error.code.CommonErrorCodes;
+import nz.ac.sit.os.common.error.code.PaymentErrorCodes;
+import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelPayloadException;
+import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelTransportException;
 import nz.ac.sit.os.infrastructure.channel.paypal.service.PayPalCallbackPaymentService;
 import nz.ac.sit.os.mapper.ChannelPayOrderMapper;
 import nz.ac.sit.os.persistence.order.ChannelOrderModel;
 import nz.ac.sit.os.persistence.order.MercOrderModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CaptureOrderPaymentService {
@@ -18,12 +23,12 @@ public class CaptureOrderPaymentService {
     @Autowired
     private OrderService orderService;
 
-    public void handle(Map<String, String> headers, String requestBody) {
+    public void handle(Map<String, String> headers, String requestBody) throws BizException {
 
         try {
-            ChannelOrderModel channelOrderResult = payPalCallbackPaymentService.checkoutOrderApprovedCallback(headers, requestBody);
+            Optional<ChannelOrderModel> channelOrderOpt = payPalCallbackPaymentService.checkoutOrderApprovedCallback(headers, requestBody);
 
-            if(channelOrderResult != null) {
+            channelOrderOpt.ifPresent(channelOrderResult -> {
                 channelPayOrderMapper.updateChannelOrderByChannelOrderNo(channelOrderResult);
                 ChannelOrderModel channelOrder = channelPayOrderMapper.acquireChannelOrderByChannelOrderNo(channelOrderResult);
 
@@ -31,9 +36,14 @@ public class CaptureOrderPaymentService {
                 mercOrder.setOrderNo(channelOrder.getPayOrderNo());
                 mercOrder.setPayStatus(channelOrderResult.getPayStatus());
                 orderService.updateMercOrder(mercOrder);
-            }
+            });
+
+        } catch (PaymentChannelPayloadException e) {
+            throw new BizException(PaymentErrorCodes.PAYLOAD_INVALID, e.getMessage(), e);
+        } catch (PaymentChannelTransportException e) {
+            throw new BizException(PaymentErrorCodes.PAYMENT_PROVIDER_UNAVAILABLE, e.getMessage(), e);
         } catch (Exception e) {
-            System.out.println("Capture Exception:" + e);
+            throw new BizException(CommonErrorCodes.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 }

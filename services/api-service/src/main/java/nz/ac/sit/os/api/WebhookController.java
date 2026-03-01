@@ -1,10 +1,11 @@
 package nz.ac.sit.os.api;
 
 import nz.ac.sit.os.application.order.CaptureOrderPaymentService;
+import nz.ac.sit.os.common.error.BizException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -29,7 +30,7 @@ public class WebhookController {
     private CaptureOrderPaymentService captureOrderPaymentService;
 
     @RequestMapping("/checkout-order-approved")
-    public ModelAndView checkoutOrderApproved(HttpServletRequest request, HttpServletResponse resp) {
+    public ResponseEntity checkoutOrderApproved(HttpServletRequest request, HttpServletResponse resp) throws BizException {
 
         // Simple helper method to help you extract the headers from HttpServletRequest object.
         Map< String, String > map = new HashMap< String, String >();
@@ -68,9 +69,13 @@ public class WebhookController {
                 }
             }
         }
+
         body = stringBuilder.toString();
+        if (body == null || body.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         captureOrderPaymentService.handle(map, body);
 
-        return null;
+        return ResponseEntity.ok().build();
     }
 }
