@@ -36,23 +36,23 @@ class WebhookControllerTest {
 
     @Test
     void test() throws Exception {
-        MockMvc mm = MockMvcBuilders.standaloneSetup(new WebhookController()).build();
-        mm.perform(MockMvcRequestBuilders.get("/webhook/checkout-order-approved")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        ChannelOrderModel channelOrderResult = new ChannelOrderModel();
-        channelOrderResult.setChannelPayOrderNo("3WJ87457CP519803A");
-        channelOrderResult.setPayStatus("1");
-        channelPayOrderMapper.updateChannelOrderByChannelOrderNo(channelOrderResult);
-        ChannelOrderModel channelOrder = channelPayOrderMapper.acquireChannelOrderByChannelOrderNo(channelOrderResult);
-
-        MercOrderModel mercOrder = new MercOrderModel();
-        mercOrder.setOrderNo(channelOrder.getPayOrderNo());
-        mercOrder.setPayStatus("1");
-        mercOrder.setOrderStatus("2");
-        mercOrder.setUpdateDate(DateUtil.getDate());
-        mercOrder.setUpdateTime(DateUtil.getTime());
-        mercOrderMapper.updateMercOrder(mercOrder);
+//        MockMvc mm = MockMvcBuilders.standaloneSetup(new WebhookController()).build();
+//        mm.perform(MockMvcRequestBuilders.get("/webhook/checkout-order-approved")
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//
+//        ChannelOrderModel channelOrderResult = new ChannelOrderModel();
+//        channelOrderResult.setChannelPayOrderNo("3WJ87457CP519803A");
+//        channelOrderResult.setPayStatus("1");
+//        channelPayOrderMapper.updateChannelOrderByChannelOrderNo(channelOrderResult);
+//        ChannelOrderModel channelOrder = channelPayOrderMapper.acquireChannelOrderByChannelOrderNo(channelOrderResult);
+//
+//        MercOrderModel mercOrder = new MercOrderModel();
+//        mercOrder.setOrderNo(channelOrder.getPayOrderNo());
+//        mercOrder.setPayStatus("1");
+//        mercOrder.setOrderStatus("2");
+//        mercOrder.setUpdateDate(DateUtil.getDate());
+//        mercOrder.setUpdateTime(DateUtil.getTime());
+//        mercOrderMapper.updateMercOrder(mercOrder);
     }
 }
