@@ -24,12 +24,15 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SPRING_FLYWAY_ENABLED: "true"
       TZ: Pacific/Auckland
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
+      WEBHOOK_URL: ${WEBHOOK_URL}
     volumes:
       - ./assets:/data/scan2dine/assets
     expose:
       - "8041"
-#    ports:
-#      - "${BACKEND_PORT}:8041"
+    #    ports:
+    #      - "${BACKEND_PORT}:8041"
     restart: unless-stopped
 
   frontend:
@@ -39,8 +42,8 @@ services:
       - backend
     expose:
       - "3000"
-#    ports:
-#      - "${FRONTEND_PORT}:3000"
+    #    ports:
+    #      - "${FRONTEND_PORT}:3000"
     restart: unless-stopped
 
   nginx:
@@ -51,10 +54,10 @@ services:
       - backend
     ports:
       - "80:80"
-
-      # - "443:443"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./assets:/data/scan2dine/assets
     restart: unless-stopped
 
