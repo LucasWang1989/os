@@ -24,6 +24,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SPRING_FLYWAY_ENABLED: "true"
       TZ: Pacific/Auckland
+    volumes:
+      - ./assets:/data/scan2dine/assets
     expose:
       - "8041"
 #    ports:
@@ -53,6 +55,7 @@ services:
       # - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./assets:/data/scan2dine/assets
     restart: unless-stopped
 
 #volumes:

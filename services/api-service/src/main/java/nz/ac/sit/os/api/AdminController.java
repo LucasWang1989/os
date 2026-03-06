@@ -7,6 +7,7 @@ import nz.ac.sit.os.mapper.ProductDefMapper;
 import nz.ac.sit.os.application.order.OrderService;
 import nz.ac.sit.os.application.product.ProductDefService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,6 +38,9 @@ public class AdminController {
     private ProductDefMapper productDefMapper;
     @Autowired
     private ProductDefService productDefService;
+
+    @Value("${assets.path}")
+    private String assetsPath;
 
     @PostMapping("/login")
     public ModelAndView login(@RequestParam String username,
@@ -137,8 +141,8 @@ public class AdminController {
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         fileName = UUID.randomUUID()+suffixName;
         try {
-            String path = request.getSession().getServletContext().getRealPath("customer/img/tof/");
-            fileUpload.transferTo(new File(path + fileName));
+//            String path = request.getSession().getServletContext().getRealPath("customer/img/tof/");
+            fileUpload.transferTo(new File(assetsPath + fileName));
             return "img/tof/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
