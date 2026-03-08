@@ -65,8 +65,7 @@ public class CustomerController {
             dishes.add(productModel);
         }
 
-        String payUrl = tradeService.createOrder(tableNo, dishes);
-        return Map.of("payUrl", payUrl);
+        return tradeService.createOrder(tableNo, dishes);
     }
 
     @GetMapping("/checkout/orders/{orderNo}")

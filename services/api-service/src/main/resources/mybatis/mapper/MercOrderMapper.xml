@@ -71,6 +71,12 @@
             order by F_UPDATE_DATE
     </select>
 
+    <select id="fetchOrderByOrderNo" parameterType="String" resultMap="MercOrderMap">
+        select <include refid="Base_Column_List"/>
+        from os_merc_order
+        where f_order_no = #{orderNo}
+    </select>
+
     <select id="fetchLatestWait2CookOrder" resultMap="MercOrderMap">
         select <include refid="Base_Column_List"/>
         from os_merc_order

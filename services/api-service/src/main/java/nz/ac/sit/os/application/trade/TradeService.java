@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: os
@@ -37,7 +39,7 @@ public class TradeService {
 
 
     @Transactional
-    public String createOrder(String tableNo, List<ProductModel> dishes) {
+    public Map<String, String> createOrder(String tableNo, List<ProductModel> dishes) {
         BigInteger totalAmount = new BigInteger("0");
         String orderNo = OrderGenerators.nextOrderNo();
         List<OrderProductModel> orderProducts = new ArrayList<>();
@@ -111,7 +113,11 @@ public class TradeService {
         channelOrderResult.setPayOrderNo(orderNo);
         channelPayOrderMapper.updateChannelOrder(channelOrderResult);
 
-        return channelOrderResult.getPayUrl();
+        Map<String, String> resMap = new HashMap<>();
+        resMap.put("orderNo", orderNo);
+        resMap.put("payUrl", channelOrderResult.getPayUrl());
+
+        return resMap;
     }
 
 }
