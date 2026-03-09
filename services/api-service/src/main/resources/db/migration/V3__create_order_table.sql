@@ -24,7 +24,7 @@ create table os_merc_order
     F_RESERVED              varchar(30)    null comment 'Reserved field',
     F_RESERVED_1            varchar(30)    null comment 'Reserved field 2',
     F_RESERVED_2            varchar(30)     null comment 'Reserved field 3',
-    constraint uniq_f_order_no
+    constraint uniq_merc_order_f_order_no
         unique (F_ORDER_NO)
 )
     comment 'Merchant Order Table' charset = utf8;

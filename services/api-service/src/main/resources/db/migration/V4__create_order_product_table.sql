@@ -9,7 +9,7 @@ create table os_order_product
     F_UPDATE_TIME           varchar(6)    not null comment 'Record updated time',
     F_CREATED_DATE          varchar(8)    not null comment 'Record created date',
     F_CREATED_TIME          varchar(6)    not null comment 'Record created time',
-    constraint uniq_f_order_no
+    constraint uniq_order_product_f_order_no
         unique (F_ORDER_NO, F_PRODUCT_ID)
 )
     comment 'Product In Order Table' charset = utf8;

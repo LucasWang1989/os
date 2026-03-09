@@ -93,6 +93,12 @@
             <version>8.0.33</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- database migration -->
         <dependency>
             <groupId>org.flywaydb</groupId>
