@@ -32,7 +32,7 @@ EXPOSE 8041
 
 # 10. Health check (use localhost inside the container; avoid hard-coded IP)
 HEALTHCHECK --start-period=60s --interval=180s --timeout=10s --retries=3 \
-    CMD curl -fsS "http://localhost:${APP_PORT}/actuator/info" || exit 1
+    CMD curl -fsS "http://localhost:${APP_PORT}/actuator/health" || exit 1
 
 # 11. Container startup command
 CMD ["java", \

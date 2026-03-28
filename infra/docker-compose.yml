@@ -27,6 +27,7 @@ services:
       PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
       PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
       WEBHOOK_URL: ${WEBHOOK_URL}
+      ASSETS_PATH: ${ASSETS_PATH}
     volumes:
       - ./assets:/data/scan2dine/assets
     expose:

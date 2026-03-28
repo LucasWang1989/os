@@ -181,7 +181,7 @@ os/
 ### 1️⃣ Clone Repository
 
 ```
-git clone https://github.com/LucasWang1989/os.git
+git clone https://github.com/binaryharbor/os.git
 cd os/infra
 ```
 
