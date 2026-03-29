@@ -1,7 +1,7 @@
 package nz.ac.sit.os.application.trade;
 
 import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelException;
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.ChannelOrderModel;
 import java.util.Map;
 import java.util.Optional;
 

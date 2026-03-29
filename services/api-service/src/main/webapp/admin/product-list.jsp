@@ -1,5 +1,5 @@
 ﻿<%@ page import="java.util.List" %>
-<%@ page import="nz.ac.sit.os.persistence.product.ProductModel" %>
+<%@ page import="nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel" %>
 <%@ page import="java.math.BigInteger" %>
 <!DOCTYPE html>
 <html lang="en">

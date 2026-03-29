@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("nz.ac.sit.os.mapper")
+@MapperScan("nz.ac.sit.os.infrastructure.mybatis.mapper")
 public class OsApplication {
 
 	public static void main(String[] args) {

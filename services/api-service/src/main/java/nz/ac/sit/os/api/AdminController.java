@@ -1,10 +1,10 @@
 package nz.ac.sit.os.api;
 
 import nz.ac.sit.os.common.util.AmountUtil;
-import nz.ac.sit.os.persistence.order.MercOrderModel;
-import nz.ac.sit.os.persistence.product.ProductModel;
-import nz.ac.sit.os.mapper.ProductDefMapper;
-import nz.ac.sit.os.application.order.OrderService;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.ProductDefMapper;
+import nz.ac.sit.os.application.order.QueryOrderService;
 import nz.ac.sit.os.application.product.ProductDefService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,7 @@ import java.util.UUID;
 public class AdminController {
 
     @Autowired
-    private OrderService orderService;
+    private QueryOrderService queryOrderService;
     @Autowired
     private ProductDefMapper productDefMapper;
     @Autowired
@@ -41,27 +41,6 @@ public class AdminController {
 
     @Value("${assets.path}")
     private String assetsPath;
-
-    @PostMapping("/login")
-    public ModelAndView login(@RequestParam String username,
-                        @RequestParam String password,
-                        HttpSession session,
-                        RedirectAttributes redirectAttributes) {
-
-        ModelAndView mav = new ModelAndView();
-
-        if(!username.isEmpty()
-                && !password.isEmpty()
-                && "admin".equals(username)
-                && "123456".equals(password)) {
-            session.setAttribute("user",username+password);
-            return this.fetchOrder();
-        }else {
-            mav.setViewName("/admin/login.jsp");
-            mav.addObject("errorMessage", "Incorrect user name or password, please try again.");
-        }
-        return mav;
-    }
 
     @RequestMapping("/add-product")
     public ModelAndView addProduct(@RequestParam String name,
@@ -89,7 +68,7 @@ public class AdminController {
 
     @RequestMapping("/fetch-order")
     public ModelAndView fetchOrder() {
-        List<MercOrderModel> orders = orderService.fetchOrder();
+        List<MercOrderModel> orders = queryOrderService.fetchOrder();
 
         ModelAndView mav = new ModelAndView("/admin/orders-list.jsp");
         mav.addObject("orders", orders);
@@ -98,7 +77,7 @@ public class AdminController {
 
     @RequestMapping("/fetch-order-product")
     public ModelAndView fetchOrderProduct(@RequestParam String orderNo) {
-        List<ProductModel> orderProducts = orderService.fetchOrderProduct(orderNo);
+        List<ProductModel> orderProducts = queryOrderService.fetchOrderProduct(orderNo);
 
         ModelAndView mav = new ModelAndView("/admin/orders-detail.jsp");
         mav.addObject("orderProducts", orderProducts);
@@ -109,7 +88,7 @@ public class AdminController {
     public ModelAndView fetchLatestWaitedOrder() {
         ModelAndView wait2CookProductMAV = new ModelAndView();
 
-        MercOrderModel wait2CookOrder = orderService.fetchLatestWait2CookOrder();
+        MercOrderModel wait2CookOrder = queryOrderService.fetchLatestWait2CookOrder();
         if(wait2CookOrder != null) {
             wait2CookProductMAV = this.fetchOrderProduct(wait2CookOrder.getOrderNo());
         }else {
@@ -125,7 +104,7 @@ public class AdminController {
         MercOrderModel mercOrder = new MercOrderModel();
         mercOrder.setOrderNo(orderNo);
         mercOrder.setCookingStatus("1");
-        orderService.updateMercOrder(mercOrder);
+        queryOrderService.updateMercOrder(mercOrder);
 
         // 0-Screen display 1-Admin
         if("0".equals(mode)) {

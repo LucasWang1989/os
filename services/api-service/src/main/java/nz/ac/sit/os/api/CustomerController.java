@@ -1,10 +1,10 @@
 package nz.ac.sit.os.api;
 
 import nz.ac.sit.os.api.dto.CheckoutRequest;
-import nz.ac.sit.os.persistence.product.ProductModel;
-import nz.ac.sit.os.mapper.ProductDefMapper;
-import nz.ac.sit.os.application.order.OrderService;
-import nz.ac.sit.os.application.trade.TradeService;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.ProductDefMapper;
+import nz.ac.sit.os.application.order.QueryOrderService;
+import nz.ac.sit.os.application.order.CreateOrderPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +24,9 @@ public class CustomerController {
     @Autowired
     private ProductDefMapper productDefMapper;
     @Autowired
-    private TradeService tradeService;
+    private CreateOrderPaymentService createOrderPaymentService;
     @Autowired
-    private OrderService orderService;
+    private QueryOrderService queryOrderService;
 
     @GetMapping("/menus")
     public Map<String, Object> fetchProduct(@RequestParam Integer tableNo) {
@@ -65,13 +65,13 @@ public class CustomerController {
             dishes.add(productModel);
         }
 
-        return tradeService.createOrder(tableNo, dishes);
+        return createOrderPaymentService.handle(tableNo, dishes);
     }
 
     @GetMapping("/checkout/orders/{orderNo}")
     public Map<String, Object> fetchOrderDetail(@PathVariable String orderNo) {
 
-        List<ProductModel> orderProducts = orderService.fetchOrderProduct(orderNo);
+        List<ProductModel> orderProducts = queryOrderService.fetchOrderProduct(orderNo);
 
         Map<String, Object> res = new HashMap<>();
         res.put("orderProducts", orderProducts);

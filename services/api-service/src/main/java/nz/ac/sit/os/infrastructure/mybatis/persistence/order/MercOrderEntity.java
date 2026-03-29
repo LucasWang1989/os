@@ -1,4 +1,4 @@
-package nz.ac.sit.os.persistence.order;
+package nz.ac.sit.os.infrastructure.mybatis.persistence.order;
 
 import lombok.Data;
 import java.math.BigInteger;

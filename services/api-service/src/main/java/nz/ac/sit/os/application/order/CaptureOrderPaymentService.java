@@ -6,9 +6,9 @@ import nz.ac.sit.os.common.error.code.PaymentErrorCodes;
 import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelPayloadException;
 import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelTransportException;
 import nz.ac.sit.os.infrastructure.channel.paypal.service.PayPalCallbackPaymentService;
-import nz.ac.sit.os.mapper.ChannelPayOrderMapper;
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
-import nz.ac.sit.os.persistence.order.MercOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.ChannelPayOrderMapper;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.ChannelOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class CaptureOrderPaymentService {
     @Autowired
     private ChannelPayOrderMapper channelPayOrderMapper;
     @Autowired
-    private OrderService orderService;
+    private QueryOrderService queryOrderService;
 
     public void handle(Map<String, String> headers, String requestBody) throws BizException {
 
@@ -35,7 +35,7 @@ public class CaptureOrderPaymentService {
                 MercOrderModel mercOrder = new MercOrderModel();
                 mercOrder.setOrderNo(channelOrder.getPayOrderNo());
                 mercOrder.setPayStatus(channelOrderResult.getPayStatus());
-                orderService.updateMercOrder(mercOrder);
+                queryOrderService.updateMercOrder(mercOrder);
             });
 
         } catch (PaymentChannelPayloadException e) {

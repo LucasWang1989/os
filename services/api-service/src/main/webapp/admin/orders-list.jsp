@@ -1,4 +1,4 @@
-﻿<%@ page import="nz.ac.sit.os.persistence.order.MercOrderModel" %>
+﻿<%@ page import="nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel" %>
 <%@ page import="java.util.List" %>
 <%@ page import="nz.ac.sit.os.common.util.DateUtil" %>
 <%@ page import="java.math.BigDecimal" %>

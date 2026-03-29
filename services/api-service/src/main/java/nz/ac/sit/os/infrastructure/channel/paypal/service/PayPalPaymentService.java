@@ -5,7 +5,7 @@ import com.paypal.orders.*;
 import nz.ac.sit.os.infrastructure.channel.paypal.remote.PayPalRemoteAPI;
 import nz.ac.sit.os.common.util.AmountUtil;
 import nz.ac.sit.os.common.util.DateUtil;
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.ChannelOrderModel;
 import nz.ac.sit.os.application.trade.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

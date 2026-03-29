@@ -9,7 +9,7 @@ import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelException;
 import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelPayloadException;
 import nz.ac.sit.os.infrastructure.channel.exception.PaymentChannelTransportException;
 import nz.ac.sit.os.infrastructure.channel.paypal.remote.PayPalRemoteAPI;
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.ChannelOrderModel;
 import nz.ac.sit.os.application.trade.CallbackPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

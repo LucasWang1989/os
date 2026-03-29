@@ -2,8 +2,8 @@ package nz.ac.sit.os.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.ac.sit.os.mapper.MercOrderMapper;
-import nz.ac.sit.os.persistence.order.MercOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.MercOrderMapper;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

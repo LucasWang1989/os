@@ -1,6 +1,6 @@
-package nz.ac.sit.os.mapper;
+package nz.ac.sit.os.infrastructure.mybatis.mapper;
 
-import nz.ac.sit.os.persistence.product.ProductModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 

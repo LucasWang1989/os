@@ -1,10 +1,10 @@
 package nz.ac.sit.os.application.order;
 
 import nz.ac.sit.os.common.util.DateUtil;
-import nz.ac.sit.os.persistence.order.MercOrderModel;
-import nz.ac.sit.os.persistence.product.ProductModel;
-import nz.ac.sit.os.mapper.MercOrderMapper;
-import nz.ac.sit.os.mapper.ProductDefMapper;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.MercOrderMapper;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.ProductDefMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
  * @date: 2022-10-27 13:30
  **/
 @Service
-public class OrderService {
+public class QueryOrderService {
 
     @Autowired
     private MercOrderMapper mercOrderMapper;

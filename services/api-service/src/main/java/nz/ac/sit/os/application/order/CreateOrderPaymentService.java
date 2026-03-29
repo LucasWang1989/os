@@ -1,14 +1,15 @@
-package nz.ac.sit.os.application.trade;
+package nz.ac.sit.os.application.order;
 
+import nz.ac.sit.os.application.trade.PaymentService;
 import nz.ac.sit.os.common.util.DateUtil;
 import nz.ac.sit.os.common.util.OrderGenerators;
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
-import nz.ac.sit.os.persistence.order.MercOrderModel;
-import nz.ac.sit.os.persistence.order.OrderProductModel;
-import nz.ac.sit.os.persistence.product.ProductModel;
-import nz.ac.sit.os.mapper.ChannelPayOrderMapper;
-import nz.ac.sit.os.mapper.MercOrderMapper;
-import nz.ac.sit.os.mapper.OrderProductMapper;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.ChannelOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.OrderProductModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.ChannelPayOrderMapper;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.MercOrderMapper;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.OrderProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ import java.util.Map;
  * @date: 2022-10-25 21:53
  **/
 @Service
-public class TradeService {
+public class CreateOrderPaymentService {
 
     @Autowired
     private MercOrderMapper mercOrderMapper;
@@ -39,7 +40,7 @@ public class TradeService {
 
 
     @Transactional
-    public Map<String, String> createOrder(String tableNo, List<ProductModel> dishes) {
+    public Map<String, String> handle(String tableNo, List<ProductModel> dishes) {
         BigInteger totalAmount = new BigInteger("0");
         String orderNo = OrderGenerators.nextOrderNo();
         List<OrderProductModel> orderProducts = new ArrayList<>();

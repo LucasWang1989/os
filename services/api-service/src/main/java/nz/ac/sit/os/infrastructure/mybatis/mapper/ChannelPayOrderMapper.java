@@ -1,6 +1,6 @@
-package nz.ac.sit.os.mapper;
+package nz.ac.sit.os.infrastructure.mybatis.mapper;
 
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.ChannelOrderModel;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

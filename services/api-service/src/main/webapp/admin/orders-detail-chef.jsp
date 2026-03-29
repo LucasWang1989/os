@@ -1,4 +1,4 @@
-﻿<%@ page import="nz.ac.sit.os.persistence.product.ProductModel" %>
+﻿<%@ page import="nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel" %>
 <%@ page import="java.math.BigInteger" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>

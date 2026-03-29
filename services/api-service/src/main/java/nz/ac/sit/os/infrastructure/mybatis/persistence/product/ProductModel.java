@@ -1,4 +1,4 @@
-package nz.ac.sit.os.persistence.product;
+package nz.ac.sit.os.infrastructure.mybatis.persistence.product;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

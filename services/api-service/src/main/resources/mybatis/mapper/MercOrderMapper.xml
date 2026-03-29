@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="nz.ac.sit.os.mapper.MercOrderMapper">
-    <resultMap id="MercOrderMap" type="nz.ac.sit.os.persistence.order.MercOrderModel">
+<mapper namespace="nz.ac.sit.os.infrastructure.mybatis.mapper.MercOrderMapper">
+    <resultMap id="MercOrderMap" type="nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel">
         <id column="F_ORDER_NO" property="orderNo"/>
         <result column="F_NAME" property="name"/>
         <result column="F_TABLE_NO" property="tableNo"/>
@@ -37,7 +37,7 @@
     </sql>
 
 
-    <insert id="storeMercOrder" parameterType="nz.ac.sit.os.persistence.order.MercOrderModel">
+    <insert id="storeMercOrder" parameterType="nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel">
         insert into os_merc_order(<include refid="Base_Column_List"/>)
         values (
         #{orderNo},
@@ -87,7 +87,7 @@
         order by F_UPDATE_DATE limit 1
     </select>
 
-    <update id="updateMercOrder" parameterType="nz.ac.sit.os.persistence.order.MercOrderModel">
+    <update id="updateMercOrder" parameterType="nz.ac.sit.os.infrastructure.mybatis.persistence.order.MercOrderModel">
         update os_merc_order
         set
         <if test="payStatus!=null and payStatus!=''">

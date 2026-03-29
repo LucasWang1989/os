@@ -1,8 +1,8 @@
 package nz.ac.sit.os.application.product;
 
 import nz.ac.sit.os.common.util.DateUtil;
-import nz.ac.sit.os.persistence.product.ProductModel;
-import nz.ac.sit.os.mapper.ProductDefMapper;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.product.ProductModel;
+import nz.ac.sit.os.infrastructure.mybatis.mapper.ProductDefMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

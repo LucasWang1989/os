@@ -1,6 +1,6 @@
 package nz.ac.sit.os.application.trade;
 
-import nz.ac.sit.os.persistence.order.ChannelOrderModel;
+import nz.ac.sit.os.infrastructure.mybatis.persistence.order.ChannelOrderModel;
 
 /**
  * @program: os
