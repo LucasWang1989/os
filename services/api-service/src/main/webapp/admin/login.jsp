@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html lang="en" class="h-100">
 
 <head>
@@ -26,7 +27,7 @@
 										<a href=""><img src="images/logo.png" width="20%"></a>
 									</div>
                                     <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form action="login" method="post">
+                                    <form action="/auth/login" method="post">
                                         <div class="form-group">
                                             <label class="mb-1"><strong>Username</strong></label>
                                             <input type="text" name="username" class="form-control">
@@ -37,15 +38,9 @@
                                         </div>
                                         <div class="form-row d-flex justify-content-between mt-4 mb-2">
                                             <div class="form-group">
-                                                <%
-                                                    String errorMessge = "";
-                                                    if(request.getAttribute("errorMessage") != null) {
-                                                        errorMessge = (String)request.getAttribute("errorMessage");
-                                                %>
-                                                <p style="color: red"><%=errorMessge%></p>
-                                                <%
-                                                    }
-                                                %>
+                                                <c:if test="${not empty param.error}">
+                                                    <p style="color:red;">${param.error}</p>
+                                                </c:if>
                                             </div>
                                         </div>
                                         <div class="text-center">

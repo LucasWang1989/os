@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nz.ac.sit.os.infrastructure.mybatis.mapper.AuthUserMapper">
+    <resultMap id="AuthUserMap" type="nz.ac.sit.os.domain.auth.User">
+        <id column="F_ID" property="id"/>
+        <result column="F_USERNAME" property="username"/>
+        <result column="F_PASSWORD" property="password"/>
+        <result column="F_ENABLED" property="enabled"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        F_ID, F_USERNAME, F_PASSWORD, F_ENABLED
+    </sql>
+
+    <select id="findByUsername" parameterType="String" resultMap="AuthUserMap">
+        select <include refid="Base_Column_List"/>
+        from os_auth_user
+        where F_USERNAME = #{username}
+    </select>
+
+</mapper>
